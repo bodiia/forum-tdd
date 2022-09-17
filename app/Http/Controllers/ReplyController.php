@@ -2,19 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreReplyRequest;
 use App\Models\Reply;
 use App\Models\Thread;
-use Illuminate\Http\Request;
 
-class RepliesController extends Controller
+class ReplyController extends Controller
 {
-    public function store(Request $request, Thread $thread)
+    public function __construct()
     {
-        $attributes = $request->validate([
-            'body' => 'required|min:10|max:255',
-        ]);
+        $this->middleware('auth');
+    }
 
-        $reply = new Reply($attributes);
+    public function store(StoreReplyRequest $request, Thread $thread)
+    {
+        $reply = new Reply($request->validated());
 
         $reply->owner()->associate(auth()->user());
         $reply->thread()->associate($thread);

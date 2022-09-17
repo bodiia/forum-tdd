@@ -1,16 +1,14 @@
 <?php
 
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\RepliesController;
-use App\Http\Controllers\ThreadsController;
+use App\Http\Controllers\ReplyController;
+use App\Http\Controllers\ThreadController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', HomeController::class)->name('home');
 
-Route::resource('threads', ThreadsController::class);
+Route::resource('threads', ThreadController::class);
 
-Route::group(['middleware' => 'auth'], function () {
-    Route::post('threads/{thread}/replies', [RepliesController::class, 'store'])->name('threads.replies.store');
-});
+Route::post('threads/{thread}/replies', [ReplyController::class, 'store'])->name('threads.replies.store');
 
 require __DIR__.'/auth.php';

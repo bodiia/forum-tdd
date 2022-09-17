@@ -3,7 +3,7 @@
         <x-thread-card :thread="$thread"/>
     </div>
 
-    <div class="pb-8">
+    <div class="pb-12">
         <x-card>
             <x-slot name="header">
                 <h2>Replies</h2>
@@ -11,7 +11,7 @@
 
             <x-slot name="body">
                 @foreach($thread->replies as $reply)
-                    <div class="mb-4">
+                    <div class="mb-6">
                         <div class="pb-4 pt-2">
                             <p>{{ $reply->body }}</p>
                         </div>
@@ -21,6 +21,15 @@
                         </span>
                     </div>
                 @endforeach
+                @auth
+                    <x-reply-form :thread="$thread"/>
+                @else
+                    <div class="flex justify-center">
+                        <div class="h-8 px-4 py-2 mx-auto bg-blue-600 text-white text-sm inline-flex items-center rounded-xl">
+                            <h2>Please <a href="{{ route('login') }}" class="underline underline-offset-4">sign in</a> to participate in this discussion</h2>
+                        </div>
+                    </div>
+                @endauth
             </x-slot>
         </x-card>
     </div>

@@ -11,10 +11,13 @@ class Thread extends Model
 {
     use HasFactory;
 
+    protected $guarded = [
+        'user_id',
+    ];
+
     protected $fillable = [
         'title',
         'body',
-        'user_id',
     ];
 
     public function creator(): BelongsTo

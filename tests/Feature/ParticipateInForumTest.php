@@ -28,9 +28,9 @@ class ParticipateInForumTest extends TestCase
     {
         $this->expectException(AuthenticationException::class);
 
-        $params = Reply::factory()->make()->only(['body']);
-
-        $this->withoutExceptionHandling()->post(route('threads.replies.store', $this->thread), $params);
+        $this
+            ->withoutExceptionHandling()
+            ->post(route('threads.replies.store', $this->thread), []);
     }
 
     public function test_authenticated_user_can_participate_in_forum_threads()
@@ -38,13 +38,12 @@ class ParticipateInForumTest extends TestCase
         $user = User::factory()->create();
         $params = Reply::factory()->make()->only(['body']);
 
-        $this->actingAs($user);
-        $response = $this->post(route('threads.replies.store', $this->thread), $params);
+        $this->actingAs($user)
+            ->post(route('threads.replies.store', $this->thread), $params)
+            ->assertRedirect(route('threads.show', $this->thread))
+            ->assertSessionDoesntHaveErrors();
 
-        $response->assertRedirect(route('threads.show', $this->thread));
-        $response->assertSessionDoesntHaveErrors();
-
-        $response = $this->get(route('threads.show', $this->thread));
-        $response->assertSee($params['body']);
+        $this->get(route('threads.show', $this->thread))
+            ->assertSee($params['body']);
     }
 }

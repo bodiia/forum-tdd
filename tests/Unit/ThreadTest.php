@@ -36,10 +36,11 @@ class ThreadTest extends TestCase
 
     public function test_a_thread_can_add_reply()
     {
-        Reply::factory()->create([
+        $reply = Reply::factory()->create([
             'thread_id' => $this->thread->id,
         ]);
 
         $this->assertCount(1, $this->thread->replies);
+        $this->assertEquals($this->thread->id, $reply->thread->id);
     }
 }
