@@ -10,12 +10,9 @@ class Reply extends Model
 {
     use HasFactory;
 
-    protected $guarded = [
+    protected $fillable = [
         'user_id',
         'thread_id',
-    ];
-
-    protected $fillable = [
         'body',
     ];
 

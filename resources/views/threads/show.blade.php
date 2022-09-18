@@ -10,7 +10,7 @@
             </x-slot>
 
             <x-slot name="body">
-                @foreach($thread->replies as $reply)
+                @forelse ($thread->replies as $reply)
                     <div class="mb-6">
                         <div class="pb-4 pt-2">
                             <p>{{ $reply->body }}</p>
@@ -20,7 +20,12 @@
                             <a href="#" class="font-semibold hover:text-gray-900 hover:underline hover:underline-offset-4">{{ $reply->owner->name }}</a> said {{ $reply->created_at->diffForHumans() }}
                         </span>
                     </div>
-                @endforeach
+                @empty
+                    <div class="flex justify-center mb-8">
+                        <h2 class="underline underline-offset-8">Be the first to reply in this thread!</h2>
+                    </div>
+                @endforelse
+
                 @auth
                     <x-reply-form :thread="$thread"/>
                 @else

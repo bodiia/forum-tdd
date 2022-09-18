@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Channel;
 use App\Models\Reply;
 use App\Models\Thread;
 use App\Models\User;
@@ -13,15 +14,18 @@ class ParticipateInForumTest extends TestCase
 {
     use RefreshDatabase;
 
-    private Thread $thread;
+    private array $routeParams;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->thread = Thread::factory()->create([
+        $thread = Thread::factory()->create([
             'user_id' => User::factory()->create(),
+            'channel_id' => Channel::factory()->create(),
         ]);
+
+        $this->routeParams = ['channel' => $thread->channel, 'thread' => $thread];
     }
 
     public function test_unauthenticated_user_can_not_participate_in_forum_threads()
@@ -30,7 +34,7 @@ class ParticipateInForumTest extends TestCase
 
         $this
             ->withoutExceptionHandling()
-            ->post(route('threads.replies.store', $this->thread), []);
+            ->post(route('threads.replies.store', $this->routeParams), []);
     }
 
     public function test_authenticated_user_can_participate_in_forum_threads()
@@ -39,11 +43,21 @@ class ParticipateInForumTest extends TestCase
         $params = Reply::factory()->make()->only(['body']);
 
         $this->actingAs($user)
-            ->post(route('threads.replies.store', $this->thread), $params)
-            ->assertRedirect(route('threads.show', $this->thread))
+            ->post(route('threads.replies.store', $this->routeParams), $params)
+            ->assertRedirect(route('threads.show', $this->routeParams))
             ->assertSessionDoesntHaveErrors();
 
-        $this->get(route('threads.show', $this->thread))
+        $this->get(route('threads.show', $this->routeParams))
             ->assertSee($params['body']);
+    }
+
+    public function test_reply_requires_a_body()
+    {
+        $params = Reply::factory()->make(['body' => null])->only(['body']);
+
+        $this
+            ->actingAs(User::factory()->create())
+            ->post(route('threads.replies.store', $this->routeParams), $params)
+            ->assertSessionHasErrors(['body']);
     }
 }

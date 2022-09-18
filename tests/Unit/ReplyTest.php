@@ -2,6 +2,7 @@
 
 namespace Tests\Unit;
 
+use App\Models\Channel;
 use App\Models\Reply;
 use App\Models\Thread;
 use App\Models\User;
@@ -18,6 +19,7 @@ class ReplyTest extends TestCase
 
         $thread = Thread::factory()->create([
             'user_id' => $user->id,
+            'channel_id' => Channel::factory()->create()->id
         ]);
 
         $reply = Reply::factory()->create([

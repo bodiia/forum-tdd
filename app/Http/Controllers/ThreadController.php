@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreThreadRequest;
+use App\Models\Channel;
 use App\Models\Thread;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 
 class ThreadController extends Controller
@@ -16,7 +16,7 @@ class ThreadController extends Controller
 
     public function index()
     {
-        $threads = Thread::query()->with(['creator'])->latest()->get();
+        $threads = Thread::query()->with(['creator', 'channel'])->latest()->get();
 
         return view('threads.index', compact('threads'));
     }
@@ -28,14 +28,16 @@ class ThreadController extends Controller
 
     public function store(StoreThreadRequest $request)
     {
-        $thread = new Thread($request->validated());
-        $thread->creator()->associate(auth()->user());
-        $thread->save();
+        $attributes = $request->validated();
+        $attributes['user_id'] = auth()->id();
 
-        return to_route('threads.show', $thread)->with('success', 'Post was created!');
+        $thread = Thread::query()->create($attributes);
+
+        return to_route('threads.show', ['channel' => $thread->channel, 'thread' => $thread])
+            ->with('success', 'Post was created!');
     }
 
-    public function show(Thread $thread)
+    public function show(Channel $channel, Thread $thread)
     {
         $thread->load([
             'replies',

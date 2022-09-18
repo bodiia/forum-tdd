@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreReplyRequest;
+use App\Models\Channel;
 use App\Models\Reply;
 use App\Models\Thread;
 
@@ -13,14 +14,15 @@ class ReplyController extends Controller
         $this->middleware('auth');
     }
 
-    public function store(StoreReplyRequest $request, Thread $thread)
+    public function store(StoreReplyRequest $request, Channel $channel, Thread $thread)
     {
-        $reply = new Reply($request->validated());
+        $attributes = $request->validated();
+        $attributes['user_id'] = auth()->id();
+        $attributes['thread_id'] = $thread->id;
 
-        $reply->owner()->associate(auth()->user());
-        $reply->thread()->associate($thread);
-        $reply->save();
+        Reply::query()->create($attributes);
 
-        return to_route('threads.show', $thread)->with('success', 'Reply was created!');
+        return to_route('threads.show', ['channel' => $thread->channel, 'thread' => $thread])
+            ->with('success', 'Reply was created!');
     }
 }

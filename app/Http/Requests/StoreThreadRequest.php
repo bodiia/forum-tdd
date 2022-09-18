@@ -26,6 +26,7 @@ class StoreThreadRequest extends FormRequest
         return [
             'title' => 'required|min:10|max:255',
             'body' => 'required|min:10',
+            'channel_id' => 'required|exists:channels,id',
         ];
     }
 }

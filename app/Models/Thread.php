@@ -11,18 +11,21 @@ class Thread extends Model
 {
     use HasFactory;
 
-    protected $guarded = [
-        'user_id',
-    ];
-
     protected $fillable = [
         'title',
         'body',
+        'user_id',
+        'channel_id',
     ];
 
     public function creator(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function channel(): BelongsTo
+    {
+        return $this->belongsTo(Channel::class);
     }
 
     public function replies(): HasMany

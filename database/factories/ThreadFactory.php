@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Channel;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -21,6 +22,7 @@ class ThreadFactory extends Factory
             'title' => fake()->sentence,
             'body' => fake()->paragraph,
             'user_id' => User::query()->inRandomOrder()->first()->id,
+            'channel_id' => Channel::query()->inRandomOrder()->first()->id,
         ];
     }
 }
