@@ -19,7 +19,7 @@ class ReplyTest extends TestCase
 
         $thread = Thread::factory()->create([
             'user_id' => $user->id,
-            'channel_id' => Channel::factory()->create()->id
+            'channel_id' => Channel::factory()->create()->id,
         ]);
 
         $reply = Reply::factory()->create([

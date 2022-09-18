@@ -21,7 +21,7 @@ class ThreadsTest extends TestCase
 
         $this->thread = Thread::factory()->create([
             'user_id' => User::factory()->create()->id,
-            'channel_id' => Channel::factory()->create()->id
+            'channel_id' => Channel::factory()->create()->id,
         ]);
     }
 
@@ -59,7 +59,7 @@ class ThreadsTest extends TestCase
     {
         $channel = Channel::factory()->create();
         $threadInChannel = Thread::factory()->create([
-            'channel_id' => $channel
+            'channel_id' => $channel,
         ]);
         $threadNotInChannel = Thread::factory()->create();
 
