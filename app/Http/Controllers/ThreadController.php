@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Filters\ThreadsFilter;
 use App\Http\Requests\StoreThreadRequest;
 use App\Models\Channel;
 use App\Models\Thread;
@@ -14,9 +15,13 @@ class ThreadController extends Controller
         $this->middleware('auth')->except(['index', 'show']);
     }
 
-    public function index()
+    public function index(ThreadsFilter $filters)
     {
-        $threads = Thread::query()->with(['creator', 'channel'])->latest()->get();
+        $threads = Thread::query()
+            ->filter($filters)
+            ->with(['creator', 'channel'])
+            ->latest()
+            ->get();
 
         return view('threads.index', compact('threads'));
     }
@@ -44,7 +49,7 @@ class ThreadController extends Controller
             'replies.owner',
         ]);
 
-        return view('threads.show', compact('thread'));
+        return view('threads.show', compact('thread', 'channel'));
     }
 
     public function edit(Thread $thread)

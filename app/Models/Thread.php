@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Filters\ThreadsFilter;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -31,5 +32,10 @@ class Thread extends Model
     public function replies(): HasMany
     {
         return $this->hasMany(Reply::class);
+    }
+
+    public function scopeFilter($query, ThreadsFilter $filters)
+    {
+        $filters->apply($query);
     }
 }

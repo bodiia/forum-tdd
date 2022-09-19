@@ -15,6 +15,9 @@
                     <x-nav-link :href="route('threads.index')" :active="request()->routeIs('threads.index')">
                         Threads
                     </x-nav-link>
+                    <x-nav-link :href="route('threads.create')" :active="request()->routeIs('threads.create')">
+                        New Thread
+                    </x-nav-link>
 
                     <div class="hidden sm:flex sm:items-center sm:ml-6">
                         <x-dropdown align="left" width="48">
@@ -31,7 +34,7 @@
                             </x-slot>
 
                             <x-slot name="content">
-                                @foreach(App\Models\Channel::all() as $channel)
+                                @foreach($channels as $channel)
                                     <x-dropdown-link href="{{ route('threads.channel.index', $channel) }}">
                                         {{ $channel->name }}
                                     </x-dropdown-link>

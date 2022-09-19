@@ -3,28 +3,29 @@
 namespace App\Providers;
 
 use App\Models\Channel;
+use App\View\Composers\ChannelsComposer;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
-class AppServiceProvider extends ServiceProvider
+class ViewServiceProvider extends ServiceProvider
 {
     /**
-     * Register any application services.
+     * Register services.
      *
      * @return void
      */
     public function register()
     {
-        //
+        $this->app->singleton(ChannelsComposer::class);
     }
 
     /**
-     * Bootstrap any application services.
+     * Bootstrap services.
      *
      * @return void
      */
     public function boot()
     {
-
+        View::composer(['layouts.navigation', 'threads.create'], ChannelsComposer::class);
     }
 }

@@ -19,7 +19,7 @@ class ThreadFactory extends Factory
     public function definition()
     {
         return [
-            'title' => fake()->sentence,
+            'title' => fake()->unique()->sentence,
             'body' => fake()->paragraph,
             'user_id' => User::query()->inRandomOrder()->first()->id,
             'channel_id' => Channel::query()->inRandomOrder()->first()->id,
