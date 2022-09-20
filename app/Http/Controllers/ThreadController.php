@@ -10,18 +10,16 @@ use Illuminate\Http\Request;
 
 class ThreadController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth')->except(['index', 'show']);
-    }
-
-    public function index(ThreadsFilter $filters)
+    public function index(Request $request, ThreadsFilter $filters)
     {
         $threads = Thread::query()
             ->filter($filters)
+            ->withCount('replies')
             ->with(['creator', 'channel'])
             ->latest()
             ->get();
+
+        if ($request->wantsJson()) return $threads;
 
         return view('threads.index', compact('threads'));
     }
@@ -33,8 +31,7 @@ class ThreadController extends Controller
 
     public function store(StoreThreadRequest $request)
     {
-        $attributes = $request->validated();
-        $attributes['user_id'] = auth()->id();
+        $attributes =[...$request->validated(), 'user_id' => auth()->id()];
 
         $thread = Thread::query()->create($attributes);
 
@@ -44,12 +41,9 @@ class ThreadController extends Controller
 
     public function show(Channel $channel, Thread $thread)
     {
-        $thread->load([
-            'replies',
-            'replies.owner',
-        ]);
+        $replies = $thread->replies()->with('owner')->paginate(10);
 
-        return view('threads.show', compact('thread', 'channel'));
+        return view('threads.show', compact('thread', 'replies'));
     }
 
     public function edit(Thread $thread)

@@ -6,7 +6,9 @@
             <a href="{{ route('threads.show', ['channel' => $thread->channel, 'thread' => $thread]) }}">
                 <h2 class="hover:underline hover:underline-offset-8">{{ $thread->title }}</h2>
             </a>
-            <span class="text-xs hover:underline hover:underline-offset-4">by <a href="#">{{ $thread->creator->name }}</a></span>
+            @if(! request()->routeIs('threads.show'))
+                <span class="text-xs">{{ $thread->replies_count }} {{ Str::plural('reply', $thread->replies_count) }}</span>
+            @endif
         </div>
     </x-slot>
 

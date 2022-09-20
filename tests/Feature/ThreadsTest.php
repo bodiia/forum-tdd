@@ -59,14 +59,13 @@ class ThreadsTest extends TestCase
     {
         $channel = Channel::factory()->create();
         $threadInChannel = Thread::factory()->create([
-            'channel_id' => $channel,
+            'channel_id' => $channel->id,
         ]);
-        $threadNotInChannel = Thread::factory()->create();
 
         $this->get(route('threads.channel.index', $channel))
             ->assertOk()
             ->assertSee($threadInChannel->title)
-            ->assertDontSee($threadNotInChannel->title);
+            ->assertDontSee($this->thread->title);
     }
 
     public function test_user_can_filter_threads_by_username()
@@ -82,5 +81,31 @@ class ThreadsTest extends TestCase
             ->assertOk()
             ->assertSee($otherThread->title)
             ->assertDontSee($this->thread->title);
+    }
+
+    public function test_user_can_filter_threads_by_popularity()
+    {
+        $createThreadWithReplies = static function ($times) {
+            $user = User::factory()->create();
+            $thread = Thread::factory()->create([
+                'user_id' => $user->id,
+                'channel_id' => Channel::factory()->create()->id,
+            ]);
+
+            Reply::factory($times)->create([
+                'user_id' => $user->id,
+                'thread_id' => $thread->id
+            ]);
+
+            return $thread;
+        };
+
+        for ($i = 1; $i <= 3; $i++) {
+            $createThreadWithReplies($i);
+        }
+
+        $response = $this->getJson(route('threads.index', ['popularity' => 'desc']))->json();
+
+        $this->assertEquals([3, 2, 1, 0], array_column($response, 'replies_count'));
     }
 }

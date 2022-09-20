@@ -1,5 +1,5 @@
 <x-app-layout>
-    <div class="mt-6">
+    <div class="py-6 w-2/3 mx-auto">
         <x-card>
             <x-slot name="header">
                 <h2>Create Thread</h2>
@@ -30,7 +30,7 @@
 
                     <div>
                         <x-input-label value="Body" class="mb-2"/>
-                        <textarea required name="body" id="body" cols="30" rows="10" class="w-full rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">{{ old('body') }}</textarea>
+                        <textarea required name="body" id="body" cols="30" rows="7" class="w-full rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">{{ old('body') }}</textarea>
 
                         @error('body')
                             <span class="ml-4 text-sm text-red-600">{{ $message }}</span>
