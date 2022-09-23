@@ -27,7 +27,7 @@ class FavoritesTest extends TestCase
 
         $this->reply = Reply::factory()->create([
             'user_id' => $this->user->id,
-            'thread_id' =>  $this->thread->id
+            'thread_id' => $this->thread->id,
         ]);
     }
 

@@ -2,20 +2,22 @@
 
 namespace App\Models;
 
+use App\Traits\Favoritable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class Reply extends Model
 {
-    use HasFactory;
+    use HasFactory, Favoritable;
 
     protected $fillable = [
         'user_id',
         'thread_id',
         'body',
     ];
+
+    protected $with = ['owner', 'favorites'];
 
     public function owner(): BelongsTo
     {
@@ -25,10 +27,5 @@ class Reply extends Model
     public function thread(): BelongsTo
     {
         return $this->belongsTo(Thread::class);
-    }
-
-    public function favorites(): MorphMany
-    {
-        return $this->morphMany(Favorite::class, 'favorited');
     }
 }

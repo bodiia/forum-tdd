@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Filters\ThreadsFilter;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -19,6 +18,8 @@ class Thread extends Model
         'user_id',
         'channel_id',
     ];
+
+    protected $with = ['channel'];
 
     public function creator(): BelongsTo
     {

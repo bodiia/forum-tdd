@@ -9,6 +9,7 @@ use ReflectionClass;
 abstract class Filter
 {
     protected Builder $builder;
+
     protected array $filters;
 
     public function __construct(
@@ -30,7 +31,7 @@ abstract class Filter
         $this->builder = $builder;
 
         foreach ($this->getFilters() as $filter => $value) {
-            $method = 'by' . ucfirst($filter);
+            $method = 'by'.ucfirst($filter);
             $this->$method($value);
         }
     }

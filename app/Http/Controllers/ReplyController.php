@@ -10,7 +10,7 @@ class ReplyController extends Controller
 {
     public function store(StoreReplyRequest $request, Channel $channel, Thread $thread)
     {
-        $attributes =[...$request->validated(), 'user_id' => auth()->id()];
+        $attributes = [...$request->validated(), 'user_id' => auth()->id()];
 
         $thread->replies()->create($attributes);
 

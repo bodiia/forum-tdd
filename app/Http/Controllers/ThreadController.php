@@ -12,14 +12,11 @@ class ThreadController extends Controller
 {
     public function index(Request $request, ThreadsFilter $filters)
     {
-        $threads = Thread::query()
-            ->filter($filters)
-            ->withCount('replies')
-            ->with(['creator', 'channel'])
-            ->latest()
-            ->get();
+        $threads = Thread::query()->filter($filters)->withCount('replies')->latest()->get();
 
-        if ($request->wantsJson()) return $threads;
+        if ($request->wantsJson()) {
+            return $threads;
+        }
 
         return view('threads.index', compact('threads'));
     }
@@ -31,7 +28,7 @@ class ThreadController extends Controller
 
     public function store(StoreThreadRequest $request)
     {
-        $attributes =[...$request->validated(), 'user_id' => auth()->id()];
+        $attributes = [...$request->validated(), 'user_id' => auth()->id()];
 
         $thread = Thread::query()->create($attributes);
 
@@ -41,7 +38,7 @@ class ThreadController extends Controller
 
     public function show(Channel $channel, Thread $thread)
     {
-        $replies = $thread->replies()->with('owner')->paginate(10);
+        $replies = $thread->replies()->paginate(10);
 
         return view('threads.show', compact('thread', 'replies'));
     }
@@ -56,8 +53,12 @@ class ThreadController extends Controller
         //
     }
 
-    public function destroy(Thread $thread)
+    public function destroy(Channel $channel, Thread $thread)
     {
-        //
+        $this->authorize('delete', $thread);
+
+        $thread->delete();
+
+        return to_route('threads.index')->with('success', 'Thread was deleted!');
     }
 }

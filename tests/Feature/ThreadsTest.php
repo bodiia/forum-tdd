@@ -94,7 +94,7 @@ class ThreadsTest extends TestCase
 
             Reply::factory($times)->create([
                 'user_id' => $user->id,
-                'thread_id' => $thread->id
+                'thread_id' => $thread->id,
             ]);
 
             return $thread;

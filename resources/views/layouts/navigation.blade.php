@@ -84,6 +84,9 @@
                         </x-slot>
 
                         <x-slot name="content">
+                            <x-dropdown-link href="{{ route('profiles.show', auth()->user()) }}">
+                                My Profile
+                            </x-dropdown-link>
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
 

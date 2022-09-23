@@ -11,7 +11,9 @@ class FavoriteController extends Controller
         $attributes = ['user_id' => auth()->id()];
 
         if (! $reply->favorites()->where($attributes)->exists()) {
-            return $reply->favorites()->create($attributes);
+            $reply->favorites()->create($attributes);
         }
+
+        return redirect()->back();
     }
 }

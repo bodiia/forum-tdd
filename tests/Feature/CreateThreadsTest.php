@@ -3,10 +3,12 @@
 namespace Tests\Feature;
 
 use App\Models\Channel;
+use App\Models\Reply;
 use App\Models\Thread;
 use App\Models\User;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
 class CreateThreadsTest extends TestCase
@@ -74,7 +76,36 @@ class CreateThreadsTest extends TestCase
             ->assertSessionHasErrors(['channel_id']);
     }
 
-    public function createThread(array $attributes = [], string $method = 'create')
+    public function test_unauthorized_users_can_not_delete_threads()
+    {
+        $user = User::factory()->create();
+        $thread = $this->createThread(['user_id' => $user->id]);
+
+        $this
+            ->delete(route('threads.channel.destroy', ['thread' => $thread, 'channel' => $thread->channel]))
+            ->assertRedirect(route('login'));
+
+        $this
+            ->actingAs(User::factory()->create())
+            ->delete(route('threads.channel.destroy', ['thread' => $thread, 'channel' => $thread->channel]))
+            ->assertStatus(Response::HTTP_FORBIDDEN);
+    }
+
+    public function test_authorized_users_can_delete_threads()
+    {
+        $user = User::factory()->create();
+        $thread = $this->createThread(['user_id' => $user->id]);
+        $reply = Reply::factory()->create(['thread_id' => $thread->id]);
+
+        $this
+            ->actingAs($user)
+            ->delete(route('threads.channel.destroy', ['thread' => $thread, 'channel' => $thread->channel]));
+
+        $this->assertDatabaseMissing('threads', $thread->toArray());
+        $this->assertDatabaseMissing('replies', $reply->toArray());
+    }
+
+    public function createThread(array $attributes = [], string $method = 'create'): Thread
     {
         return Thread::factory()->$method([
             'user_id' => User::factory()->create()->id,
