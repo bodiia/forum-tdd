@@ -3,13 +3,14 @@
 namespace App\Models;
 
 use App\Traits\Favoritable;
+use App\Traits\RecordsActivity;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Reply extends Model
 {
-    use HasFactory, Favoritable;
+    use HasFactory, Favoritable, RecordsActivity;
 
     protected $fillable = [
         'user_id',

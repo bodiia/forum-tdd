@@ -94,6 +94,8 @@ class CreateThreadsTest extends TestCase
     public function test_authorized_users_can_delete_threads()
     {
         $user = User::factory()->create();
+        auth()->login($user);
+
         $thread = $this->createThread(['user_id' => $user->id]);
         $reply = Reply::factory()->create(['thread_id' => $thread->id]);
 
@@ -103,6 +105,16 @@ class CreateThreadsTest extends TestCase
 
         $this->assertDatabaseMissing('threads', $thread->toArray());
         $this->assertDatabaseMissing('replies', $reply->toArray());
+        $this->assertDatabaseMissing('activities', [
+            'type' => 'created_thread',
+            'subject_id' => $thread->id,
+            'subject_type' => $thread::class,
+        ]);
+        $this->assertDatabaseMissing('activities', [
+            'type' => 'created_reply',
+            'subject_id' => $reply->id,
+            'subject_type' => $reply::class,
+        ]);
     }
 
     public function createThread(array $attributes = [], string $method = 'create'): Thread

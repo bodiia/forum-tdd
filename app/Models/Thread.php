@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Filters\ThreadsFilter;
+use App\Traits\RecordsActivity;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -10,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Thread extends Model
 {
-    use HasFactory;
+    use HasFactory, RecordsActivity;
 
     protected $fillable = [
         'title',
@@ -20,6 +21,15 @@ class Thread extends Model
     ];
 
     protected $with = ['channel'];
+
+    protected static function booted()
+    {
+        parent::booted();
+
+        static::deleting(function ($thread) {
+            $thread->replies->each->delete();
+        });
+    }
 
     public function creator(): BelongsTo
     {
