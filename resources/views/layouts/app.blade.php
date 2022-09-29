@@ -18,6 +18,9 @@
             <main>
                 {{ $slot }}
             </main>
+            @if (session('success'))
+                <x-alert message="{{ session('success') }}"></x-alert>
+            @endif
         </div>
     </body>
 </html>
