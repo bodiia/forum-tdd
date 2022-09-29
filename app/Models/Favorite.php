@@ -18,7 +18,7 @@ class Favorite extends Model
     public function favorited(): MorphTo
     {
         return $this->morphTo()->morphWith([
-            Reply::class => 'thread'
+            Reply::class => 'thread',
         ]);
     }
 }
