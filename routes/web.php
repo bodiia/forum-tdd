@@ -22,6 +22,9 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::delete('threads/{channel}/{thread}', [ThreadController::class, 'destroy'])
         ->name('threads.channel.destroy');
+
+    Route::delete('replies/{reply}', [ReplyController::class, 'destroy'])
+        ->name('replies.destroy');
 });
 
 Route::get('threads', [ThreadController::class, 'index'])
