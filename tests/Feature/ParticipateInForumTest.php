@@ -41,7 +41,6 @@ class ParticipateInForumTest extends TestCase
 
     public function test_authenticated_user_can_participate_in_forum_threads()
     {
-
         /** @var Authenticatable $user */
         $user = User::factory()->create();
         $params = Reply::factory()->make()->only(['body']);
@@ -104,5 +103,46 @@ class ParticipateInForumTest extends TestCase
             ->delete(route('replies.destroy', $reply));
 
         $this->assertDatabaseMissing('replies', $reply->toArray());
+    }
+
+    public function test_unauthenticated_user_can_not_update_reply()
+    {
+        $this->expectException(AuthenticationException::class);
+
+        $this
+            ->withoutExceptionHandling()
+            ->patch(route('replies.update', 1));
+    }
+
+    public function test_unauthorized_user_can_not_update_reply()
+    {
+        $reply = Reply::factory()
+            ->for(User::factory()->create(), 'owner')
+            ->create();
+
+        /** @var Authenticatable $user */
+        $user = User::factory()->create();
+
+        $this->expectException(AuthorizationException::class);
+
+        $this
+            ->withoutExceptionHandling()
+            ->actingAs($user)
+            ->patch(route('replies.update', $reply), $reply->only('body'));
+    }
+
+    public function test_authorized_user_can_update_reply()
+    {
+        /** @var Authenticatable $user */
+        $user = User::factory()->create();
+        $reply = Reply::factory()->create(['user_id' => $user->id]);
+
+        $params = ['body' => fake()->sentence];
+
+        $this
+            ->actingAs($user)
+            ->patch(route('replies.update', $reply), $params);
+
+        $this->assertDatabaseHas('replies', [...$reply->only(['id', 'body']), ...$params]);
     }
 }

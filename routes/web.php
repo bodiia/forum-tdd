@@ -25,6 +25,9 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::delete('replies/{reply}', [ReplyController::class, 'destroy'])
         ->name('replies.destroy');
+
+    Route::patch('replies/{reply}', [ReplyController::class, 'update'])
+        ->name('replies.update');
 });
 
 Route::get('threads', [ThreadController::class, 'index'])

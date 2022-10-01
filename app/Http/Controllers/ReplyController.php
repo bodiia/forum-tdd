@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreReplyRequest;
+use App\Http\Requests\ReplyRequest;
 use App\Models\Channel;
 use App\Models\Reply;
 use App\Models\Thread;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class ReplyController extends Controller
 {
-    public function store(StoreReplyRequest $request, Channel $channel, Thread $thread)
+    public function store(ReplyRequest $request, Channel $channel, Thread $thread)
     {
         $attributes = [...$request->validated(), 'user_id' => auth()->id()];
 
@@ -25,6 +27,23 @@ class ReplyController extends Controller
 
         $reply->delete();
 
-        return redirect()->back()->with('success', 'Reply was deleted!');
+        return back()->with('success', 'Reply was deleted!');
+    }
+
+    public function update(Request $request, Reply $reply)
+    {
+        $this->authorize('update', $reply);
+
+        $validator = Validator::make($request->all(), [
+            'body' => 'required|min:3|max:255',
+        ]);
+
+        if ($validator->fails()) {
+            return back()->withErrors($validator, 'reply');
+        }
+
+        $reply->update($validator->validated());
+
+        return back()->with('success', 'Reply was updated!');
     }
 }

@@ -14,6 +14,6 @@ class FavoriteController extends Controller
             $reply->favorites()->create($attributes);
         }
 
-        return redirect()->back();
+        return back();
     }
 }

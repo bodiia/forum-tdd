@@ -12,7 +12,7 @@ class ReplyPolicy
 
     public function update(User $user, Reply $reply)
     {
-        //
+        return $reply->owner()->is($user);
     }
 
     public function delete(User $user, Reply $reply)
