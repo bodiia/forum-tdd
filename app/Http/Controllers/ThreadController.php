@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Filters\ThreadsFilter;
-use App\Http\Requests\StoreThreadRequest;
+use App\Http\Requests\ThreadRequest;
 use App\Models\Channel;
 use App\Models\Thread;
 use Illuminate\Http\Request;
@@ -26,7 +26,7 @@ class ThreadController extends Controller
         return view('threads.create');
     }
 
-    public function store(StoreThreadRequest $request)
+    public function store(ThreadRequest $request)
     {
         $attributes = [...$request->validated(), 'user_id' => auth()->id()];
 

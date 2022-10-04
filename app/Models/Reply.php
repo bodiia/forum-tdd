@@ -18,15 +18,6 @@ class Reply extends Model
         'body',
     ];
 
-    protected static function booted()
-    {
-        parent::booted();
-
-        static::deleting(function ($reply) {
-            $reply->favorites->each->delete();
-        });
-    }
-
     protected $with = ['owner', 'favorites'];
 
     public function owner(): BelongsTo

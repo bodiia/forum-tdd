@@ -31,7 +31,7 @@
                                         </div>
                                     @endcan
                                     @if ($errors->reply->has('body'))
-                                        <x-alert message="{{ $errors->reply->first('body') }}"></x-alert>
+                                        <x-alert class="bg-red-400" message="{{ $errors->reply->first('body') }}"></x-alert>
                                     @endif
                                 </div>
 
@@ -42,15 +42,35 @@
 
                                     <span class="border-r border-gray-700">&nbsp</span>
 
-                                    <form action="{{ route('favorites.store', $reply) }}" method="POST">
-                                        @csrf
+                                    @auth
+                                        @if ($reply->favorited)
+                                            <form action="{{ route('favorites.destroy', ['reply' => $reply, 'favorite' => $reply->favorite_by_user]) }}" method="POST">
+                                                @csrf
+                                                @method('DELETE')
 
-                                        <button type="submit" class="flex justify-center items-center" @if($reply->favorited) disabled @endif>
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 hover:fill-black @if($reply->favorited) fill-black  @endif">
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
-                                            </svg>
-                                        </button>
-                                    </form>
+                                                <button type="submit" class="flex justify-center items-center">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 fill-black @if($reply->favorited) hover:fill-white  @endif">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+                                                    </svg>
+                                                </button>
+                                            </form>
+                                        @else
+                                            <form action="{{ route('favorites.store', $reply) }}" method="POST">
+                                                @csrf
+
+                                                <button type="submit" class="flex justify-center items-center">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 hover:fill-black @if($reply->favorited) fill-black  @endif">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+                                                    </svg>
+                                                </button>
+                                            </form>
+                                        @endif
+                                    @endauth
+                                    @guest
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+                                        </svg>
+                                    @endguest
                                     <span>{{ $reply->favorites_count }}</span>
 
                                     @can('delete', $reply)

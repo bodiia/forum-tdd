@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Traits\RecordsActivity;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class Favorite extends Model
@@ -20,5 +21,10 @@ class Favorite extends Model
         return $this->morphTo()->morphWith([
             Reply::class => 'thread',
         ]);
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 }

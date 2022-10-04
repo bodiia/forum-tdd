@@ -20,6 +20,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('replies/{reply}/favorites', [FavoriteController::class, 'store'])
         ->name('favorites.store');
 
+    Route::delete('replies/{reply}/favorites/{favorite}', [FavoriteController::class, 'destroy'])
+        ->name('favorites.destroy');
+
     Route::delete('threads/{channel}/{thread}', [ThreadController::class, 'destroy'])
         ->name('threads.channel.destroy');
 
