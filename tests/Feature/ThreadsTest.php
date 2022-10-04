@@ -6,6 +6,7 @@ use App\Models\Channel;
 use App\Models\Reply;
 use App\Models\Thread;
 use App\Models\User;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -107,5 +108,43 @@ class ThreadsTest extends TestCase
         $response = $this->getJson(route('threads.index', ['popularity' => 'desc']))->json();
 
         $this->assertEquals([3, 2, 1, 0], array_column($response, 'replies_count'));
+    }
+
+    public function test_user_can_filter_threads_by_unanswered()
+    {
+        $threadWithReplies = Thread::factory()->create();
+        Reply::factory()->create(['thread_id' => $threadWithReplies->id]);
+
+        $this->get(route('threads.index', ['unanswered' => 1]))
+            ->assertOk()
+            ->assertSee($this->thread->title)
+            ->assertSee($this->thread->body)
+            ->assertDontSee($threadWithReplies->title)
+            ->assertDontSee($threadWithReplies->body);
+    }
+
+    public function test_user_can_subscribe_a_thread()
+    {
+        /** @var Authenticatable $user */
+        $user = User::factory()->create();
+
+        $this->actingAs($user)
+            ->post(route('threads.subscriptions.store', $this->thread));
+
+        $this->assertEquals(1, $this->thread->fresh()->subscriptions->count());
+    }
+
+    public function test_user_can_unsubscribe_from_thread()
+    {
+        /** @var Authenticatable $user */
+        $user = User::factory()->create();
+
+        $this->actingAs($user)
+            ->post(route('threads.subscriptions.store', $this->thread));
+
+        $this->actingAs($user)
+            ->delete(route('threads.subscriptions.destroy', $this->thread));
+
+        $this->assertEquals(0, $this->thread->fresh()->subscriptions->count());
     }
 }

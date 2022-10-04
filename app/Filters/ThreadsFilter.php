@@ -18,4 +18,9 @@ class ThreadsFilter extends Filter
     {
         return $this->builder->orderBy('replies_count', $direction);
     }
+
+    public function byUnanswered(): Builder
+    {
+        return $this->builder->where('replies_count', 0);
+    }
 }

@@ -35,6 +35,12 @@
                                         My Threads
                                     </x-dropdown-link>
                                 @endauth
+                                <x-dropdown-link href="{{ route('threads.index', ['popularity' => 'desc']) }}">
+                                    Popular Threads
+                                </x-dropdown-link>
+                                <x-dropdown-link href="{{ route('threads.index', ['unanswered' => 1]) }}">
+                                    Unanswered Threads
+                                </x-dropdown-link>
                             </x-slot>
                         </x-dropdown>
                     </div>

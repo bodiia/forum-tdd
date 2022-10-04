@@ -40,4 +40,13 @@ trait Favoritable
             fn () => $this->favorites->count(),
         );
     }
+
+    public function favorite(): void
+    {
+        $attributes = ['user_id' => auth()->id()];
+
+        if (! $this->favorites()->where($attributes)->exists()) {
+            $this->favorites()->create($attributes);
+        }
+    }
 }

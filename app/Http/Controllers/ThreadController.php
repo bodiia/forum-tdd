@@ -12,7 +12,7 @@ class ThreadController extends Controller
 {
     public function index(Request $request, ThreadsFilter $filters)
     {
-        $threads = Thread::query()->filter($filters)->withCount('replies')->latest()->get();
+        $threads = Thread::query()->filter($filters)->latest()->get();
 
         if ($request->wantsJson()) {
             return $threads;

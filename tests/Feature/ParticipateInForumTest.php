@@ -18,16 +18,18 @@ class ParticipateInForumTest extends TestCase
 
     private array $routeParams;
 
+    private Thread $thread;
+
     protected function setUp(): void
     {
         parent::setUp();
 
-        $thread = Thread::factory()->create([
+        $this->thread = Thread::factory()->create([
             'user_id' => User::factory()->create(),
             'channel_id' => Channel::factory()->create(),
         ]);
 
-        $this->routeParams = ['channel' => $thread->channel, 'thread' => $thread];
+        $this->routeParams = ['channel' => $this->thread->channel, 'thread' => $this->thread];
     }
 
     public function test_unauthenticated_user_can_not_participate_in_forum_threads()
@@ -49,6 +51,8 @@ class ParticipateInForumTest extends TestCase
             ->post(route('threads.replies.store', $this->routeParams), $params)
             ->assertRedirect(route('threads.show', $this->routeParams))
             ->assertSessionDoesntHaveErrors();
+
+        $this->assertEquals(1, $this->thread->fresh()->replies_count);
 
         $this->get(route('threads.show', $this->routeParams))
             ->assertSee($params['body']);
@@ -103,6 +107,7 @@ class ParticipateInForumTest extends TestCase
             ->delete(route('replies.destroy', $reply));
 
         $this->assertDatabaseMissing('replies', $reply->toArray());
+        $this->assertEquals(0, $this->thread->fresh()->replies_count);
     }
 
     public function test_unauthenticated_user_can_not_update_reply()

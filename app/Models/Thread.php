@@ -18,13 +18,14 @@ class Thread extends Model
         'body',
         'user_id',
         'channel_id',
+        'replies_count',
     ];
 
     protected $with = ['channel'];
 
-    protected static function booted()
+    protected static function boot()
     {
-        parent::booted();
+        parent::boot();
 
         static::deleting(function ($thread) {
             $thread->replies->each->delete();
@@ -44,6 +45,23 @@ class Thread extends Model
     public function replies(): HasMany
     {
         return $this->hasMany(Reply::class);
+    }
+
+    public function subscriptions(): HasMany
+    {
+        return $this->hasMany(ThreadSubscription::class);
+    }
+
+    public function subscribe(User $user): void
+    {
+        $attributes = ['user_id' => $user->id];
+
+        $this->subscriptions()->create($attributes);
+    }
+
+    public function unsubscribe(User $user): void
+    {
+        $this->subscriptions()->where('user_id', $user->id)->delete();
     }
 
     public function scopeFilter($query, ThreadsFilter $filters)

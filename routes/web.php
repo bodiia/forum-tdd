@@ -6,6 +6,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReplyController;
 use App\Http\Controllers\ThreadController;
+use App\Http\Controllers\ThreadSubscriptionController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', HomeController::class)
@@ -13,6 +14,12 @@ Route::get('/', HomeController::class)
 
 Route::group(['middleware' => 'auth'], function () {
     Route::resource('threads', ThreadController::class)->except(['show', 'index', 'destroy']);
+
+    Route::post('threads/{thread}/subscriptions', [ThreadSubscriptionController::class, 'store'])
+        ->name('threads.subscriptions.store');
+
+    Route::delete('threads/{thread}/subscriptions', [ThreadSubscriptionController::class, 'destroy'])
+        ->name('threads.subscriptions.destroy');
 
     Route::post('threads/{channel}/{thread}/replies', [ReplyController::class, 'store'])
         ->name('threads.replies.store');
