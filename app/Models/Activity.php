@@ -23,7 +23,7 @@ class Activity extends Model
 
     public static function feed(User $user, int $take = 50): Collection
     {
-        $activities = static::query()->where('user_id', $user->id)->with('subject', function (MorphTo $morph) {
+        $activities = static::query()->where('user_id', $user->id)->with('subject', static function (MorphTo $morph) {
             $morph->morphWith([
                 Reply::class => 'thread',
                 Favorite::class => 'favorited',
