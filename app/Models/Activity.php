@@ -23,16 +23,15 @@ class Activity extends Model
 
     public static function feed(User $user, int $take = 50): Collection
     {
-        return static::query()->where('user_id', $user->id)
-            ->with('subject', function (MorphTo $morph) {
-                $morph->morphWith([
-                    Reply::class => 'thread',
-                    Favorite::class => 'favorited',
-                ]);
-            })
-            ->latest()->take($take)->get()
-            ->groupBy(static function ($activity) {
-                return $activity->created_at->format('Y-m-d');
-            });
+        $activities = static::query()->where('user_id', $user->id)->with('subject', function (MorphTo $morph) {
+            $morph->morphWith([
+                Reply::class => 'thread',
+                Favorite::class => 'favorited',
+            ]);
+        });
+
+        return $activities->latest()->take($take)->get()->groupBy(static function ($activity) {
+            return $activity->created_at->format('Y-m-d');
+        });
     }
 }
