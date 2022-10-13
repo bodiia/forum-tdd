@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filters;
 
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 
-class ThreadsFilter extends Filter
+final class ThreadsFilter extends Filter
 {
     public function byUsername(string $username): Builder
     {

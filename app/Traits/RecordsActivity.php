@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Traits;
 
 use App\Models\Activity;
@@ -8,7 +10,7 @@ use ReflectionClass;
 
 trait RecordsActivity
 {
-    protected static function bootRecordsActivity()
+    protected static function bootRecordsActivity(): void
     {
         if (auth()->guest()) {
             return;
