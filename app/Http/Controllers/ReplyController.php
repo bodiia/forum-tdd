@@ -6,12 +6,13 @@ use App\Http\Requests\ReplyRequest;
 use App\Models\Channel;
 use App\Models\Reply;
 use App\Models\Thread;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class ReplyController extends Controller
 {
-    public function store(ReplyRequest $request, Channel $channel, Thread $thread)
+    public function store(ReplyRequest $request, Channel $channel, Thread $thread): RedirectResponse
     {
         $attributes = [...$request->validated(), 'user_id' => auth()->id()];
 
@@ -21,7 +22,7 @@ class ReplyController extends Controller
             ->with('success', 'Reply was created!');
     }
 
-    public function destroy(Reply $reply)
+    public function destroy(Reply $reply): RedirectResponse
     {
         $this->authorize('delete', $reply);
 
@@ -30,7 +31,7 @@ class ReplyController extends Controller
         return back()->with('success', 'Reply was deleted!');
     }
 
-    public function update(Request $request, Reply $reply)
+    public function update(Request $request, Reply $reply): RedirectResponse
     {
         $this->authorize('update', $reply);
 

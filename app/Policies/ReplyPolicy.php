@@ -10,12 +10,12 @@ class ReplyPolicy
 {
     use HandlesAuthorization;
 
-    public function update(User $user, Reply $reply)
+    public function update(User $user, Reply $reply): bool
     {
         return $reply->owner()->is($user);
     }
 
-    public function delete(User $user, Reply $reply)
+    public function delete(User $user, Reply $reply): bool
     {
         return $reply->owner()->is($user);
     }

@@ -10,7 +10,7 @@ class FavoritePolicy
 {
     use HandlesAuthorization;
 
-    public function delete(User $user, Favorite $favorite)
+    public function delete(User $user, Favorite $favorite): bool
     {
         return $favorite->user()->is($user);
     }

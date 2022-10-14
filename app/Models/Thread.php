@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Filters\ThreadsFilter;
 use App\Traits\RecordsActivity;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -23,7 +24,7 @@ class Thread extends Model
 
     protected $with = ['channel'];
 
-    protected static function boot()
+    protected static function boot(): void
     {
         parent::boot();
 
@@ -52,19 +53,19 @@ class Thread extends Model
         return $this->hasMany(ThreadSubscription::class);
     }
 
-    public function subscribe(User $user): void
+    public function subscribe(User|Authenticatable $user): void
     {
         $attributes = ['user_id' => $user->id];
 
         $this->subscriptions()->create($attributes);
     }
 
-    public function unsubscribe(User $user): void
+    public function unsubscribe(User|Authenticatable $user): void
     {
         $this->subscriptions()->where('user_id', $user->id)->delete();
     }
 
-    public function scopeFilter($query, ThreadsFilter $filters)
+    public function scopeFilter($query, ThreadsFilter $filters): void
     {
         $filters->apply($query);
     }

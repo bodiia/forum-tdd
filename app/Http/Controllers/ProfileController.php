@@ -4,10 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Activity;
 use App\Models\User;
+use Illuminate\View\View;
 
 class ProfileController extends Controller
 {
-    public function show(User $user)
+    public function show(User $user): View
     {
         $activities = Activity::feed($user);
 

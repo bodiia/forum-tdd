@@ -20,7 +20,7 @@ class Reply extends Model
 
     protected $with = ['owner', 'favorites'];
 
-    protected static function boot()
+    protected static function boot(): void
     {
         parent::boot();
 
