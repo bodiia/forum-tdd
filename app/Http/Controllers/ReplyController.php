@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ReplyRequest;
+use App\Models\Channel;
 use App\Models\Reply;
 use App\Models\Thread;
-use App\Models\Channel;
-use Illuminate\Http\Request;
-use App\Http\Requests\ReplyRequest;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class ReplyController extends Controller

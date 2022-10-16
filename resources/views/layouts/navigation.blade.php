@@ -44,9 +44,11 @@
                             </x-slot>
                         </x-dropdown>
                     </div>
-                    <x-nav-link :href="route('threads.create')" :active="request()->routeIs('threads.create')">
-                        New Thread
-                    </x-nav-link>
+                    @auth
+                        <x-nav-link :href="route('threads.create')" :active="request()->routeIs('threads.create')">
+                            New Thread
+                        </x-nav-link>
+                    @endauth
 
                     <div class="hidden sm:flex sm:items-center sm:ml-6">
                         <x-dropdown align="left" width="48">

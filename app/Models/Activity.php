@@ -27,6 +27,7 @@ class Activity extends Model
             $morph->morphWith([
                 Reply::class => 'thread',
                 Favorite::class => 'favorited',
+                ThreadSubscription::class => 'thread',
             ]);
         });
 

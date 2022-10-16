@@ -133,6 +133,36 @@
                         and currently has {{ $replies->count() }} {{ Str::plural('reply', $replies->count()) }}
 
                     </p>
+                    @auth
+                        @if (! $thread->alreadySubscribedToThread(auth()->user()))
+                            <form action="{{ route('threads.subscriptions.store', $thread) }}" method="POST">
+                                @csrf
+                                <div class="inline-flex border border-gray-900 rounded-md px-4 py-2 mt-4 bg-gray-900 text-white hover:bg-white hover:text-black">
+                                    <button type="submit" class="flex items-center justify-center gap-x-2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
+                                        </svg>
+                                        <span>Subscribe</span>
+                                    </button>
+                                </div>
+                            </form>
+                        @else
+                            @can('delete', $thread->getSubscriprionByUser(auth()->user()))
+                                <form action="{{ route('threads.subscriptions.destroy', $thread) }}" method="POST">
+                                    @csrf
+                                    @method('DELETE')
+                                    <div class="inline-flex border border-gray-900 rounded-md px-4 py-2 mt-4 bg-white text-black hover:bg-gray-900 hover:text-white">
+                                        <button type="submit" class="flex items-center justify-center gap-x-2">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
+                                            </svg>
+                                            <span>Unsubscribe</span>
+                                        </button>
+                                    </div>
+                                </form>
+                            @endcan
+                        @endif
+                    @endauth
                 </x-slot>
             </x-card>
         </div>

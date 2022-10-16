@@ -28,8 +28,9 @@ class Thread extends Model
     {
         parent::boot();
 
-        static::deleting(function ($thread) {
+        static::deleting(function (self $thread) {
             $thread->replies->each->delete();
+            $thread->subscriptions->each->delete();
         });
     }
 
@@ -53,16 +54,28 @@ class Thread extends Model
         return $this->hasMany(ThreadSubscription::class);
     }
 
+    public function getSubscriprionByUser(User $user): ThreadSubscription
+    {
+        return $this->subscriptions()->firstWhere('user_id', $user->id);
+    }
+
     public function subscribe(User|Authenticatable $user): void
     {
         $attributes = ['user_id' => $user->id];
 
-        $this->subscriptions()->create($attributes);
+        if (! $this->alreadySubscribedToThread($user)) {
+            $this->subscriptions()->create($attributes);
+        }
     }
 
     public function unsubscribe(User|Authenticatable $user): void
     {
-        $this->subscriptions()->where('user_id', $user->id)->delete();
+        $this->getSubscriprionByUser($user)->delete();
+    }
+
+    public function alreadySubscribedToThread(User $user): bool
+    {
+        return $this->subscriptions()->where('user_id', $user->id)->exists();
     }
 
     public function scopeFilter($query, ThreadsFilter $filters): void
