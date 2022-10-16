@@ -54,7 +54,7 @@ class Thread extends Model
         return $this->hasMany(ThreadSubscription::class);
     }
 
-    public function getSubscriprionByUser(User $user): ThreadSubscription
+    public function getSubscriptionByUser(User $user): ThreadSubscription
     {
         return $this->subscriptions()->firstWhere('user_id', $user->id);
     }
@@ -70,7 +70,7 @@ class Thread extends Model
 
     public function unsubscribe(User|Authenticatable $user): void
     {
-        $this->getSubscriprionByUser($user)->delete();
+        $this->getSubscriptionByUser($user)->delete();
     }
 
     public function alreadySubscribedToThread(User $user): bool

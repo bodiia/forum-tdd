@@ -16,7 +16,7 @@ class ThreadSubscriptionController extends Controller
 
     public function destroy(Thread $thread): RedirectResponse
     {
-        $this->authorize('delete', $thread->getSubscriprionByUser(auth()->user()));
+        $this->authorize('delete', $thread->getSubscriptionByUser(auth()->user()));
 
         $thread->unsubscribe(auth()->user());
 
