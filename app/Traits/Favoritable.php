@@ -12,7 +12,7 @@ trait Favoritable
 {
     protected static function bootFavoritable(): void
     {
-        static::deleting(function ($model) {
+        static::deleting(static function (self $model) {
             $model->favorites->each->delete();
         });
     }
@@ -32,7 +32,7 @@ trait Favoritable
     public function favoriteByUser(): Attribute
     {
         return Attribute::get(
-            fn () => $this->favorites()->where('user_id', auth()->id())->first(),
+            fn () => $this->favorites->where('user_id', auth()->id())->first(),
         );
     }
 

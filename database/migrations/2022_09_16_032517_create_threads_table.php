@@ -19,6 +19,7 @@ return new class extends Migration
             $table->foreignId('channel_id')->constrained()->cascadeOnDelete();
             $table->unsignedInteger('replies_count')->default(0);
             $table->string('title');
+            $table->string('slug');
             $table->text('body');
             $table->timestamps();
         });

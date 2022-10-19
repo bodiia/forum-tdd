@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Filters\ThreadsFilter;
 use App\Traits\RecordsActivity;
+use App\Traits\Slugable;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -12,10 +13,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Thread extends Model
 {
-    use HasFactory, RecordsActivity;
+    use HasFactory, RecordsActivity, Slugable;
 
     protected $fillable = [
         'title',
+        'slug',
         'body',
         'user_id',
         'channel_id',
@@ -32,6 +34,11 @@ class Thread extends Model
             $thread->replies->each->delete();
             $thread->subscriptions->each->delete();
         });
+    }
+
+    protected function slugable(): string
+    {
+        return 'title';
     }
 
     public function creator(): BelongsTo

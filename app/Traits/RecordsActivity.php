@@ -22,7 +22,7 @@ trait RecordsActivity
             });
         }
 
-        static::deleting(static function ($model) {
+        static::deleting(static function (self $model) {
             $model->activities()->delete();
         });
     }
