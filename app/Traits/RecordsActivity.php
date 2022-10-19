@@ -34,10 +34,12 @@ trait RecordsActivity
 
     protected function recordActivity(string $event): void
     {
-        $this->activities()->create([
+        $attributes = [
             'type' => $this->getActivityType($event),
             'user_id' => auth()->id(),
-        ]);
+        ];
+
+        $this->activities()->create($attributes);
     }
 
     protected function activities(): MorphMany
@@ -47,8 +49,9 @@ trait RecordsActivity
 
     public static function getActivityType(string $event): string
     {
-        return $event.'_'.strtolower(
-            (new ReflectionClass(static::class))->getShortName()
-        );
+        $reflection = new ReflectionClass(static::class);
+        $class = $reflection->getShortName();
+
+        return $event . '_' . strtolower($class);
     }
 }
