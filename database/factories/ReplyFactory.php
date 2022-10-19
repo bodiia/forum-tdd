@@ -2,21 +2,17 @@
 
 namespace Database\Factories;
 
+use App\Models\Reply;
 use App\Models\Thread;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Reply>
+ * @extends Factory<Reply>
  */
 class ReplyFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
-    public function definition()
+    public function definition(): array
     {
         return [
             'user_id' => User::query()->inRandomOrder()->first()->id,

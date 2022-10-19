@@ -8,22 +8,12 @@ use Illuminate\Support\ServiceProvider;
 
 class ViewServiceProvider extends ServiceProvider
 {
-    /**
-     * Register services.
-     *
-     * @return void
-     */
-    public function register()
+    public function register(): void
     {
         $this->app->singleton(ChannelsComposer::class);
     }
 
-    /**
-     * Bootstrap services.
-     *
-     * @return void
-     */
-    public function boot()
+    public function boot(): void
     {
         View::composer(['layouts.navigation', 'threads.create'], ChannelsComposer::class);
     }
