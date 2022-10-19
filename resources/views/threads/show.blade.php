@@ -147,7 +147,7 @@
                                 </div>
                             </form>
                         @else
-                            @can('delete', $thread->getSubscriprionByUser(auth()->user()))
+                            @can('delete', $thread->getSubscriptionByUser(auth()->user()))
                                 <form action="{{ route('threads.subscriptions.destroy', $thread) }}" method="POST">
                                     @csrf
                                     @method('DELETE')

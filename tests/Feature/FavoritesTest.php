@@ -67,6 +67,6 @@ class FavoritesTest extends TestCase
         $this->actingAs($this->user)
             ->delete(route('favorites.destroy', ['reply' => $this->reply, 'favorite' => $this->reply->favorite_by_user]));
 
-        $this->assertCount(0, $this->reply->favorites);
+        $this->assertCount(0, $this->reply->fresh()->favorites);
     }
 }
