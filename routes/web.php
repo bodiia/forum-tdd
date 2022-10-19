@@ -7,6 +7,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReplyController;
 use App\Http\Controllers\ThreadController;
 use App\Http\Controllers\ThreadSubscriptionController;
+use App\Http\Controllers\UserNotificationController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', HomeController::class)
@@ -38,6 +39,9 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::patch('replies/{reply}', [ReplyController::class, 'update'])
         ->name('replies.update');
+
+    Route::delete('profiles/{user}/notifications/{notification}', [UserNotificationController::class, 'destroy'])
+        ->name('user.notifications.destroy');
 });
 
 Route::get('threads', [ThreadController::class, 'index'])
