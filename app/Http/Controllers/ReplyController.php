@@ -6,6 +6,7 @@ use App\Http\Requests\ReplyRequest;
 use App\Models\Channel;
 use App\Models\Reply;
 use App\Models\Thread;
+use App\Notifications\ThreadWasUpdated;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -16,7 +17,11 @@ class ReplyController extends Controller
     {
         $attributes = [...$request->validated(), 'user_id' => auth()->id()];
 
-        $thread->replies()->create($attributes);
+        $reply = $thread->replies()->create($attributes);
+
+        $thread->subscriptions
+            ->filter(fn ($subscription) => ! $subscription->subscriber()->is(auth()->user()))
+            ->each(fn ($subscription) => $subscription->subscriber->notify(new ThreadWasUpdated($thread, $reply)));
 
         return to_route('threads.show', ['channel' => $channel, 'thread' => $thread])
             ->with('success', 'Reply was created!');
