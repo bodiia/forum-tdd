@@ -12,6 +12,8 @@ class UserNotificationController extends Controller
     {
         $notification->markAsRead();
 
-        return back()->with('success', 'Notification was deleted!');
+        $url = $notification->data['link'];
+
+        return redirect($url);
     }
 }

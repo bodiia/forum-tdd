@@ -23,8 +23,8 @@ class ThreadWasUpdated extends Notification
     public function toDatabase(mixed $notifiable): array
     {
         return [
-            'thread' => $this->thread,
-            'reply' => $this->reply,
+            'message' => $this->reply->owner->name . ' replied to ' . $this->thread->title,
+            'link' => route('threads.show', ['channel' => $this->thread->channel, 'thread' => $this->thread]),
         ];
     }
 }
