@@ -61,7 +61,7 @@ class Thread extends Model
         return $this->hasMany(ThreadSubscription::class);
     }
 
-    public function getSubscriptionByUser(User $user): ThreadSubscription|Model
+    public function getSubscriptionByUser(User|Authenticatable $user): ThreadSubscription|Model
     {
         return $this->subscriptions()->firstWhere('user_id', $user->id);
     }

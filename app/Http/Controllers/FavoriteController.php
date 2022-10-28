@@ -12,7 +12,7 @@ class FavoriteController extends Controller
     {
         $reply->favorite();
 
-        return back();
+        return back()->with('success', __('flash.favorite.created'));
     }
 
     public function destroy(Reply $reply, Favorite $favorite): RedirectResponse
@@ -21,6 +21,6 @@ class FavoriteController extends Controller
 
         $favorite->delete();
 
-        return back()->with('success', 'This reply is now unfavorited');
+        return back()->with('success', __('flash.favorite.deleted'));
     }
 }

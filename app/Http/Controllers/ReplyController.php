@@ -24,7 +24,7 @@ class ReplyController extends Controller
             ->each(fn ($subscription) => $subscription->subscriber->notify(new ThreadWasUpdated($thread, $reply)));
 
         return to_route('threads.show', ['channel' => $channel, 'thread' => $thread])
-            ->with('success', 'Reply was created!');
+            ->with('success', __('flash.reply.created'));
     }
 
     public function destroy(Reply $reply): RedirectResponse
@@ -33,7 +33,7 @@ class ReplyController extends Controller
 
         $reply->delete();
 
-        return back()->with('success', 'Reply was deleted!');
+        return back()->with('success', __('flash.reply.deleted'));
     }
 
     public function update(Request $request, Reply $reply): RedirectResponse
@@ -50,6 +50,6 @@ class ReplyController extends Controller
 
         $reply->update($validator->validated());
 
-        return back()->with('success', 'Reply was updated!');
+        return back()->with('success', __('flash.reply.updated'));
     }
 }

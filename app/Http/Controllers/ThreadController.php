@@ -36,7 +36,7 @@ class ThreadController extends Controller
         $thread = Thread::query()->create($attributes);
 
         return to_route('threads.show', ['channel' => $thread->channel, 'thread' => $thread])
-            ->with('success', 'Post was created!');
+            ->with('success', __('flash.thread.created'));
     }
 
     public function show(Channel $channel, Thread $thread): View
@@ -62,6 +62,6 @@ class ThreadController extends Controller
 
         $thread->delete();
 
-        return to_route('threads.index')->with('success', 'Thread was deleted!');
+        return to_route('threads.index')->with('success', __('flash.thread.deleted'));
     }
 }

@@ -11,7 +11,7 @@ class ThreadSubscriptionController extends Controller
     {
         $thread->subscribe(auth()->user());
 
-        return back()->with('success', 'You have subscribed to the thread!');
+        return back()->with('success', __('flash.subscription.created'));
     }
 
     public function destroy(Thread $thread): RedirectResponse
@@ -20,6 +20,6 @@ class ThreadSubscriptionController extends Controller
 
         $thread->unsubscribe(auth()->user());
 
-        return back()->with('success', 'You unsubscribed from the thread!');
+        return back()->with('success', __('flash.subscription.deleted'));
     }
 }
