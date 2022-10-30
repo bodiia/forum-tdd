@@ -20,7 +20,7 @@
 
                     <div>
                         <label for="channel" class="block mb-2 text-sm font-medium text-gray-900">Channel</label>
-                        <select required id="channel" name="channel_id" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                        <select required id="channel" name="channel_id" class="border text-gray-900 text-sm rounded-lg border-gray-800 focus:border-gray-500 focus:ring focus:ring-gray-200 focus:ring-opacity-50 block w-full p-2.5">
                             <option selected value="">Choose a channel</option>
                             @foreach($channels as $channel)
                                 <option value="{{ $channel->id }}" @selected(old('channel_id') == $channel->id)>{{ $channel->name }}</option>
@@ -30,7 +30,7 @@
 
                     <div>
                         <x-input-label value="Body" class="mb-2"/>
-                        <textarea required name="body" id="body" cols="30" rows="7" class="w-full rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">{{ old('body') }}</textarea>
+                        <textarea required name="body" id="body" cols="30" rows="7" class="w-full rounded-md shadow-sm border-gray-800 focus:border-gray-500 focus:ring focus:ring-gray-200 focus:ring-opacity-50">{{ old('body') }}</textarea>
 
                         @error('body')
                             <span class="ml-4 text-sm text-red-600">{{ $message }}</span>

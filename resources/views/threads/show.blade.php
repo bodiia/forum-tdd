@@ -22,7 +22,7 @@
                                                 @csrf
                                                 @method('PATCH')
 
-                                                <textarea class="mb-4 text-sm w-full rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" name="body" rows="5">{{ $reply->body }}</textarea>
+                                                <textarea class="mb-4 text-sm w-full rounded-md shadow-sm border-gray-800 focus:border-gray-500 focus:ring focus:ring-gray-200 focus:ring-opacity-50" name="body" rows="5">{{ $reply->body }}</textarea>
                                                 <div class="flex justify-end gap-x-2">
                                                     <button class="bg-blue-500 py-1 px-2 text-sm rounded-md text-white hover:bg-blue-600" type="submit">Update</button>
                                                     <button class="hover:underline hover:underline-offset-4 text-sm" @click.prevent="editing = false">Cancel</button>
@@ -35,7 +35,7 @@
                                     @endif
                                 </div>
 
-                                <span class="flex items-center justify-end gap-x-2 text-right border-b border-b-gray-200 text-xs pb-2">
+                                <span class="flex items-center justify-end gap-x-2 text-right border-b border-b-gray-800 text-xs pb-2">
                                     <span>
                                         <a href="{{ route('profiles.show', $reply->owner) }}" class="font-semibold hover:text-gray-900 hover:underline hover:underline-offset-4">{{ $reply->owner->name }}</a> said {{ $reply->created_at->diffForHumans() }}
                                     </span>

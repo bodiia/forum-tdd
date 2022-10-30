@@ -3,7 +3,7 @@
         {{ $header }}
     </header>
 
-    <section class="bg-white p-6">
+    <section class="rounded-b-md bg-white p-6 border border-gray-800">
         {{ $body }}
     </section>
 </div>

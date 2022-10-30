@@ -94,15 +94,12 @@
                                 @foreach(auth()->user()->unreadNotifications as $notification)
                                     <x-dropdown-link>
                                         <div class="flex">
-                                            <span>{{ $notification->data['message'] }}</span>
                                             <form method="POST" action="{{ route('user.notifications.destroy', ['user' => auth()->user(), 'notification' => $notification]) }}">
                                                 @csrf
                                                 @method('DELETE')
 
                                                 <button type="submit">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                                                    </svg>
+                                                    <span>{{ $notification->data['message'] }}</span>
                                                 </button>
                                             </form>
                                         </div>

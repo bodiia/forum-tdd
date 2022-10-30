@@ -12,8 +12,6 @@ class UserNotificationController extends Controller
     {
         $notification->markAsRead();
 
-        $url = $notification->data['link'];
-
-        return redirect($url);
+        return redirect($notification->data['link']);
     }
 }
