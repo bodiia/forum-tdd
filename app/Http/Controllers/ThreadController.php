@@ -43,6 +43,8 @@ class ThreadController extends Controller
     {
         $replies = $thread->replies()->paginate(10);
 
+        auth()->user()?->read($thread);
+
         return view('threads.show', compact('thread', 'replies'));
     }
 

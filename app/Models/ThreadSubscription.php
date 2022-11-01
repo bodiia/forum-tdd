@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Collections\ThreadSubscriptionCollection;
 use App\Traits\RecordsActivity;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -24,5 +25,10 @@ class ThreadSubscription extends Model
     public function thread(): BelongsTo
     {
         return $this->belongsTo(Thread::class);
+    }
+
+    public function newCollection(array $models = []): ThreadSubscriptionCollection
+    {
+        return new ThreadSubscriptionCollection($models);
     }
 }

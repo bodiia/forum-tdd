@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class NotificationTests extends TestCase
+class NotificationTest extends TestCase
 {
     use RefreshDatabase;
 

@@ -85,6 +85,11 @@ class Thread extends Model
         return $this->subscriptions()->where('user_id', $user->id)->exists();
     }
 
+    public function hasUpdatesFor(User|Authenticatable $user): bool
+    {
+        return $this->updated_at > cache($user->visitedThreadCacheKey($this));
+    }
+
     public function scopeFilter($query, ThreadsFilter $filters): void
     {
         $filters->apply($query);

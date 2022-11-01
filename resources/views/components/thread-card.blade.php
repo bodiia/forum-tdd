@@ -4,7 +4,11 @@
     <x-slot name="header">
         <div class="flex justify-between items-center">
             <a href="{{ route('threads.show', ['channel' => $thread->channel, 'thread' => $thread]) }}">
-                <h2 class="hover:underline hover:underline-offset-8">{{ $thread->title }}</h2>
+                @if (auth()->check() && $thread->hasUpdatesFor(auth()->user()))
+                    <h2 class="hover:underline hover:underline-offset-8 font-bold">{{ $thread->title }}</h2>
+                @else
+                    <h2 class="hover:underline hover:underline-offset-8">{{ $thread->title }}</h2>
+                @endif
             </a>
             @if(! request()->routeIs('threads.show'))
                 <span class="text-xs">{{ $thread->replies_count }} {{ Str::plural('reply', $thread->replies_count) }}</span>
