@@ -7,6 +7,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReplyController;
 use App\Http\Controllers\ThreadController;
 use App\Http\Controllers\ThreadSubscriptionController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserNotificationController;
 use Illuminate\Support\Facades\Route;
 
@@ -55,5 +56,8 @@ Route::get('threads/{channel}/{thread}', [ThreadController::class, 'show'])
 
 Route::get('profiles/{user}', [ProfileController::class, 'show'])
     ->name('profiles.show');
+
+Route::patch('users/{user}/avatar', [UserController::class, 'update'])
+    ->name('user.avatar.update');
 
 require __DIR__.'/auth.php';

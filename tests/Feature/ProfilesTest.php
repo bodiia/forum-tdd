@@ -6,6 +6,8 @@ use App\Models\Channel;
 use App\Models\Thread;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class ProfilesTest extends TestCase
@@ -34,5 +36,26 @@ class ProfilesTest extends TestCase
         $this->get(route('profiles.show', $user))
             ->assertOk()
             ->assertSee($thread->title);
+    }
+
+
+    public function test_a_user_can_upload_avatar()
+    {
+        Storage::fake('public');
+
+        $user = User::factory()->create();
+
+        $request = [
+            'avatar' => $file = UploadedFile::fake()->image('avatar.jpg'),
+        ];
+
+        $this
+            ->actingAs($user)
+            ->patch(route('user.avatar.update', $user), $request)
+            ->assertRedirect();
+
+        $this->assertEquals('avatars/' . $file->hashName(), $user->fresh()->avatar_path);
+
+        Storage::disk('public')->assertExists('avatars/' . $file->hashName());
     }
 }
