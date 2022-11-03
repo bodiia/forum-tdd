@@ -3,16 +3,22 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UpdateUserRequest;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
-    public function update(UpdateUserRequest $request): RedirectResponse
+    public function update(User $user, UpdateUserRequest $request): RedirectResponse
     {
-        $attributes = ['avatar_path' => $request->file('avatar')->store('avatars')];
+        if ($user->avatar_path != User::DEFAULT_AVATAR) {
+            Storage::delete($user->avatar_path);
+        }
 
-        auth()->user()->update($attributes);
+        $user->update([
+            'avatar_path' => $request->file('avatar')->store('avatars'),
+        ]);
 
-        return back();
+        return back()->with('success', __('flash.user.update.image'));
     }
 }

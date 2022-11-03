@@ -13,6 +13,8 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
+    public const DEFAULT_AVATAR = 'avatars/default.jpg';
+
     protected $fillable = [
         'name',
         'email',
@@ -28,6 +30,15 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function (self $user) {
+            $user->avatar_path = self::DEFAULT_AVATAR;
+        });
+    }
 
     public function threads(): HasMany
     {
@@ -45,6 +56,11 @@ class User extends Authenticatable
     public function visitedThreadCacheKey(Thread $thread): string
     {
         return sprintf('users.%s.threads.%s', $this->id, $thread->id);
+    }
+
+    public function avatar(): string
+    {
+        return asset('storage/' . ($this->avatar_path ?: self::DEFAULT_AVATAR));
     }
 
     public function getRouteKeyName(): string

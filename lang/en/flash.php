@@ -18,4 +18,9 @@ return [
         'created' => 'You have subscribed to the thread!',
         'deleted' => 'You unsubscribed from the thread!',
     ],
+    'user' => [
+        'update' => [
+            'image' => 'Your profile image was updated!',
+        ],
+    ],
 ];

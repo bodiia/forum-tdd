@@ -36,6 +36,7 @@
                                 </div>
 
                                 <span class="flex items-center justify-end gap-x-2 text-right border-b border-b-gray-800 text-xs pb-2">
+                                    <img src="{{ $reply->owner->avatar() }}" alt="Owner profile image" class="w-10 h-10 rounded-md">
                                     <span>
                                         <a href="{{ route('profiles.show', $reply->owner) }}" class="font-semibold hover:text-gray-900 hover:underline hover:underline-offset-4">{{ $reply->owner->name }}</a> said {{ $reply->created_at->diffForHumans() }}
                                     </span>

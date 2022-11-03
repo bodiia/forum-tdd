@@ -38,7 +38,6 @@ class ProfilesTest extends TestCase
             ->assertSee($thread->title);
     }
 
-
     public function test_a_user_can_upload_avatar()
     {
         Storage::fake('public');

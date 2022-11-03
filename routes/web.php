@@ -43,6 +43,9 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::delete('profiles/{user}/notifications/{notification}', [UserNotificationController::class, 'destroy'])
         ->name('user.notifications.destroy');
+
+    Route::patch('users/{user}/avatar', [UserController::class, 'update'])
+        ->name('user.avatar.update');
 });
 
 Route::get('threads', [ThreadController::class, 'index'])
@@ -56,8 +59,5 @@ Route::get('threads/{channel}/{thread}', [ThreadController::class, 'show'])
 
 Route::get('profiles/{user}', [ProfileController::class, 'show'])
     ->name('profiles.show');
-
-Route::patch('users/{user}/avatar', [UserController::class, 'update'])
-    ->name('user.avatar.update');
 
 require __DIR__.'/auth.php';
