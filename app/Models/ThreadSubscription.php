@@ -2,12 +2,16 @@
 
 namespace App\Models;
 
+use App\Builders\ThreadSubscriptionBuilder;
 use App\Collections\ThreadSubscriptionCollection;
 use App\Traits\RecordsActivity;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @method static ThreadSubscriptionBuilder query()
+ */
 class ThreadSubscription extends Model
 {
     use HasFactory, RecordsActivity;
@@ -30,5 +34,10 @@ class ThreadSubscription extends Model
     public function newCollection(array $models = []): ThreadSubscriptionCollection
     {
         return new ThreadSubscriptionCollection($models);
+    }
+
+    public function newEloquentBuilder($query): ThreadSubscriptionBuilder
+    {
+        return new ThreadSubscriptionBuilder($query);
     }
 }

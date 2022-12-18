@@ -20,19 +20,6 @@ class Reply extends Model
 
     protected $with = ['owner', 'favorites'];
 
-    protected static function boot(): void
-    {
-        parent::boot();
-
-        static::creating(function (Reply $reply) {
-            $reply->thread()->increment('replies_count');
-        });
-
-        static::deleting(function (Reply $reply) {
-            $reply->thread()->decrement('replies_count');
-        });
-    }
-
     public function owner(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');

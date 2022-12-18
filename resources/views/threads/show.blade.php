@@ -135,7 +135,7 @@
 
                     </p>
                     @auth
-                        @if (! $thread->alreadySubscribedToThread(auth()->user()))
+                        @if (! $thread->subscriptions->pluck('user_id')->contains(auth()->id()))
                             <form action="{{ route('threads.subscriptions.store', $thread) }}" method="POST">
                                 @csrf
                                 <div class="inline-flex border border-gray-900 rounded-md px-4 py-2 mt-4 bg-gray-900 text-white hover:bg-white hover:text-black">
@@ -148,7 +148,7 @@
                                 </div>
                             </form>
                         @else
-                            @can('delete', $thread->getSubscriptionByUser(auth()->user()))
+                            @can('delete', $thread->subscriptions->firstWhere('user_id', auth()->id()))
                                 <form action="{{ route('threads.subscriptions.destroy', $thread) }}" method="POST">
                                     @csrf
                                     @method('DELETE')

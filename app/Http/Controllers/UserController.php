@@ -2,23 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\Users\UploadAvatarAction;
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Redirect;
 
 class UserController extends Controller
 {
     public function update(User $user, UpdateUserRequest $request): RedirectResponse
     {
-        if ($user->avatar_path != User::DEFAULT_AVATAR) {
-            Storage::delete($user->avatar_path);
-        }
+        UploadAvatarAction::execute($request->user(), $request->file('avatar'));
 
-        $user->update([
-            'avatar_path' => $request->file('avatar')->store('avatars'),
-        ]);
-
-        return back()->with('success', __('flash.user.update.image'));
+        return Redirect::back()->with('success', __('flash.user.update.image'));
     }
 }

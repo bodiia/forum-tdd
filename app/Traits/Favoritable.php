@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Traits;
 
 use App\Models\Favorite;
-use Illuminate\Database\Eloquent\Casts\Attribute;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 trait Favoritable
@@ -22,33 +22,8 @@ trait Favoritable
         return $this->morphMany(Favorite::class, 'favorited');
     }
 
-    public function favorited(): Attribute
+    public function whereFavorite(User $user): ?Favorite
     {
-        return Attribute::get(
-            fn () => $this->favorites->where('user_id', auth()->id())->isNotEmpty(),
-        );
-    }
-
-    public function favoriteByUser(): Attribute
-    {
-        return Attribute::get(
-            fn () => $this->favorites->where('user_id', auth()->id())->first(),
-        );
-    }
-
-    public function favoritesCount(): Attribute
-    {
-        return Attribute::get(
-            fn () => $this->favorites->count(),
-        );
-    }
-
-    public function favorite(): void
-    {
-        $attributes = ['user_id' => auth()->id()];
-
-        if (! $this->favorites()->where($attributes)->exists()) {
-            $this->favorites()->create($attributes);
-        }
+        return $this->favorites->firstWhere('user_id', $user->id);
     }
 }

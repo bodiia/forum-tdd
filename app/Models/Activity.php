@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
-use Illuminate\Support\Collection;
 
 class Activity extends Model
 {
@@ -19,20 +18,5 @@ class Activity extends Model
     public function subject(): MorphTo
     {
         return $this->morphTo();
-    }
-
-    public static function feed(User $user, int $take = 50): Collection
-    {
-        $activities = static::query()->where('user_id', $user->id)->with('subject', static function (MorphTo $morph) {
-            $morph->morphWith([
-                Reply::class => 'thread',
-                Favorite::class => 'favorited',
-                ThreadSubscription::class => 'thread',
-            ]);
-        });
-
-        return $activities->latest()->take($take)->get()->groupBy(static function ($activity) {
-            return $activity->created_at->format('Y-m-d');
-        });
     }
 }

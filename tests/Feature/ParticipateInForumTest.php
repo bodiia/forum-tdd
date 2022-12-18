@@ -98,13 +98,17 @@ class ParticipateInForumTest extends TestCase
 
     public function test_authorized_user_can_delete_reply()
     {
-        /** @var Authenticatable $user */
+        /** @var Authenticatable|User $user */
         $user = User::factory()->create();
-        $reply = Reply::factory()->create(['user_id' => $user->id]);
+
+        $this->actingAs($user)
+            ->post(route('threads.replies.store', $this->routeParams), ['body' => fake()->words(3, true)]);
+
+        $reply = $user->replies->first();
 
         $this
             ->actingAs($user)
-            ->delete(route('replies.destroy', $reply));
+            ->delete(route('replies.destroy', $reply->id));
 
         $this->assertDatabaseMissing('replies', $reply->toArray());
         $this->assertEquals(0, $this->thread->fresh()->replies_count);

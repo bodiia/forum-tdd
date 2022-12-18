@@ -28,7 +28,7 @@ abstract class Filter
         }
     }
 
-    public function apply(Builder $builder): void
+    public function apply(Builder $builder): Builder
     {
         $this->builder = $builder;
 
@@ -36,6 +36,8 @@ abstract class Filter
             $method = 'by' . ucfirst($filter);
             $this->$method($value);
         }
+
+        return $this->builder;
     }
 
     public function getFilters(): array

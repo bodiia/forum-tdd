@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Contracts\Router;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Http\Request;
@@ -12,17 +13,32 @@ class RouteServiceProvider extends ServiceProvider
 {
     public const HOME = '/';
 
+    /** @var string[] */
+    private array $routers = [
+        \App\Routers\Web\AuthRouter::class,
+        \App\Routers\Web\HomeRouter::class,
+        \App\Routers\Web\ReplyRouter::class,
+        \App\Routers\Web\ThreadRouter::class,
+        \App\Routers\Web\UserRouter::class,
+    ];
+
     public function boot(): void
     {
         $this->configureRateLimiting();
 
         $this->routes(function () {
-            Route::middleware('api')
-                ->prefix('api')
-                ->group(base_path('routes/api.php'));
+            $this->loadRoutes();
+        });
+    }
 
-            Route::middleware('web')
-                ->group(base_path('routes/web.php'));
+    protected function loadRoutes(): void
+    {
+        Route::middleware('web')->group(function () {
+            foreach ($this->routers as $router) {
+                /** @var Router $classRouter */
+                $classRouter = new $router;
+                $classRouter->map();
+            }
         });
     }
 
