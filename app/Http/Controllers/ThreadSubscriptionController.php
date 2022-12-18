@@ -23,12 +23,6 @@ class ThreadSubscriptionController extends Controller
 
     public function destroy(Thread $thread, Request $request): RedirectResponse
     {
-        if (! $subscription = ThreadSubscription::whereSubscription($request->user(), $thread)) {
-            throw new ModelNotFoundException();
-        }
-
-        Gate::authorize('delete', $subscription);
-
         UnsubscribeUserAction::execute($request->user(), $thread);
 
         return Redirect::back()->with('success', __('flash.subscription.deleted'));

@@ -7,13 +7,16 @@ namespace App\Actions\ThreadSubscriptions;
 use App\Models\Thread;
 use App\Models\ThreadSubscription;
 use App\Models\User;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 final class UnsubscribeUserAction
 {
     public static function execute(User $user, Thread $thread): void
     {
-        if (ThreadSubscription::whereSubscription($user, $thread)) {
-            $thread->subscriptions()->whereBelongsTo($user, 'subscriber')->delete();
+        if (! $subscription = ThreadSubscription::whereSubscription($user, $thread)) {
+            throw new ModelNotFoundException();
         }
+
+        $subscription->delete();
     }
 }
