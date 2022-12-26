@@ -12,18 +12,16 @@ abstract class Filter
 {
     protected Builder $builder;
 
+    /** @var array<static> */
     protected array $filters;
 
-    public function __construct(
-        protected Request $request,
-    ) {
+    public function __construct(protected Request $request)
+    {
         $reflection = new ReflectionClass(static::class);
 
         foreach ($reflection->getMethods() as $method) {
             if ($method->class == static::class) {
-                $this->filters[] = mb_strtolower(
-                    mb_strcut($method->getName(), 2)
-                );
+                $this->filters[] = mb_strtolower(mb_strcut($method->getName(), 2));
             }
         }
     }

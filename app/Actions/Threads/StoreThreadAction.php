@@ -12,6 +12,17 @@ final class StoreThreadAction
 {
     public static function execute(StoreThreadDto $dto): Thread|Model
     {
-        return Thread::query()->create($dto->all());
+        /** @var Thread $thread */
+        $thread = Thread::query()->make([
+            'title' => $dto->title,
+            'body' => $dto->body,
+        ]);
+
+        $thread->channel()->associate($dto->channel_id);
+        $thread->creator()->associate($dto->user_id);
+
+        $thread->save();
+
+        return $thread;
     }
 }

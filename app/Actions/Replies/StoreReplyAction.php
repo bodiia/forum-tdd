@@ -11,10 +11,14 @@ use App\Notifications\CreatedReply;
 
 final class StoreReplyAction
 {
-    public static function execute(Thread $thread, StoreReplyDto $storeReplyDto): void
+    public static function execute(Thread $thread, StoreReplyDto $dto): void
     {
         /** @var Reply $reply */
-        $reply = $thread->replies()->make($storeReplyDto->all());
+        $reply = $thread->replies()->make([
+            'body' => $dto->body,
+        ]);
+
+        $reply->owner()->associate($dto->user_id);
 
         if ($reply->save()) {
             $thread->newQuery()->increment('replies_count');
