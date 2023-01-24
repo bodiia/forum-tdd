@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 
 final class StoreThreadAction
 {
-    public static function execute(StoreThreadDto $dto): Thread|Model
+    public function execute(StoreThreadDto $dto): Thread|Model
     {
         /** @var Thread $thread */
         $thread = Thread::query()->make([

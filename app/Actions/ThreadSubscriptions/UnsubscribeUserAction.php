@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 final class UnsubscribeUserAction
 {
-    public static function execute(User $user, Thread $thread): void
+    public function execute(User $user, Thread $thread): void
     {
         if (! $subscription = $thread->newQuery()->getSubscription($user)) {
             throw new ModelNotFoundException();

@@ -8,7 +8,7 @@ use App\Models\Favorite;
 
 final class DeleteFavoriteAction
 {
-    public static function execute(Favorite $favorite): void
+    public function execute(Favorite $favorite): void
     {
         $favorite->delete();
     }

@@ -7,7 +7,7 @@ use App\Models\Thread;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notification;
 
-class CreatedReply extends Notification
+class NewReplyCreated extends Notification
 {
     public function __construct(
         private readonly Thread|Model $thread,

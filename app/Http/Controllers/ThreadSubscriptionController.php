@@ -7,21 +7,26 @@ use App\Actions\ThreadSubscriptions\UnsubscribeUserAction;
 use App\Models\Thread;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Redirect;
 
 class ThreadSubscriptionController extends Controller
 {
+    public function __construct(
+        private readonly SubscribeUserAction $subscribeUserAction,
+        private readonly UnsubscribeUserAction $unsubscribeUserAction,
+    ) {
+    }
+
     public function store(Thread $thread, Request $request): RedirectResponse
     {
-        SubscribeUserAction::execute($request->user(), $thread);
+        $this->subscribeUserAction->execute($request->user(), $thread);
 
-        return Redirect::back()->with('success', __('flash.subscription.created'));
+        return back()->with('success', __('flash.subscription.created'));
     }
 
     public function destroy(Thread $thread, Request $request): RedirectResponse
     {
-        UnsubscribeUserAction::execute($request->user(), $thread);
+        $this->unsubscribeUserAction->execute($request->user(), $thread);
 
-        return Redirect::back()->with('success', __('flash.subscription.deleted'));
+        return back()->with('success', __('flash.subscription.deleted'));
     }
 }

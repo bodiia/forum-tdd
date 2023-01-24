@@ -9,7 +9,7 @@ use App\Models\Reply;
 
 final class UpdateReplyAction
 {
-    public static function execute(Reply $reply, UpdateReplyDto $updateReplyDto): void
+    public function execute(Reply $reply, UpdateReplyDto $updateReplyDto): void
     {
         $reply->update($updateReplyDto->all());
     }

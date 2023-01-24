@@ -13,46 +13,54 @@ use App\Models\Reply;
 use App\Models\Thread;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
 
 class ReplyController extends Controller
 {
+    public function __construct(
+        private readonly StoreReplyAction $storeReplyAction,
+        private readonly UpdateReplyAction $updateReplyAction,
+        private readonly DeleteReplyAction $deleteReplyAction,
+    ) {
+    }
+
     public function store(ReplyRequest $request, Channel $channel, Thread $thread): RedirectResponse
     {
-        StoreReplyAction::execute($thread, StoreReplyDto::fromRequest($request));
+        $this->storeReplyAction->execute(
+            $thread,
+            StoreReplyDto::fromRequest($request)
+        );
 
-        return Redirect::route('threads.show', ['channel' => $channel, 'thread' => $thread])
+        return to_route('threads.show', ['channel' => $channel, 'thread' => $thread])
             ->with('success', __('flash.reply.created'));
     }
 
     public function destroy(Reply $reply): RedirectResponse
     {
-        Gate::authorize('delete', $reply);
+        $this->authorize('delete', $reply);
 
-        DeleteReplyAction::execute($reply);
+        $this->deleteReplyAction->execute($reply);
 
-        return Redirect::back()->with('success', __('flash.reply.deleted'));
+        return back()->with('success', __('flash.reply.deleted'));
     }
 
     public function update(Request $request, Reply $reply): RedirectResponse
     {
-        Gate::authorize('update', $reply);
+        $this->authorize('update', $reply);
 
         $validator = Validator::make($request->all(), [
             'body' => 'required|min:3|max:255',
         ]);
 
         if ($validator->fails()) {
-            return Redirect::back()->withErrors($validator, 'reply');
+            return back()->withErrors($validator, 'reply');
         }
 
-        UpdateReplyAction::execute(
+        $this->updateReplyAction->execute(
             $reply,
             UpdateReplyDto::fromArray($validator->validated())
         );
 
-        return Redirect::back()->with('success', __('flash.reply.updated'));
+        return back()->with('success', __('flash.reply.updated'));
     }
 }

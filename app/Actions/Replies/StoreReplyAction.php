@@ -7,11 +7,11 @@ namespace App\Actions\Replies;
 use App\DTOs\Replies\StoreReplyDto;
 use App\Models\Reply;
 use App\Models\Thread;
-use App\Notifications\CreatedReply;
+use App\Notifications\NewReplyCreated;
 
 final class StoreReplyAction
 {
-    public static function execute(Thread $thread, StoreReplyDto $dto): void
+    public function execute(Thread $thread, StoreReplyDto $dto): void
     {
         /** @var Reply $reply */
         $reply = $thread->replies()->make([
@@ -24,9 +24,6 @@ final class StoreReplyAction
             $thread->newQuery()->increment('replies_count');
         }
 
-        $thread->subscriptions->notifyAll(
-            notification: new CreatedReply($thread, $reply),
-            currentUser: request()->user()
-        );
+        $thread->subscriptions->notifyAll(new NewReplyCreated($thread, $reply), request()->user());
     }
 }

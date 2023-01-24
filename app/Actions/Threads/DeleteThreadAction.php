@@ -8,7 +8,7 @@ use App\Models\Thread;
 
 final class DeleteThreadAction
 {
-    public static function execute(Thread $thread): void
+    public function execute(Thread $thread): void
     {
         $thread->replies->each->delete();
         $thread->subscriptions->each->delete();

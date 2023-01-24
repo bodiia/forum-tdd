@@ -6,14 +6,13 @@ namespace App\Traits;
 
 use App\Models\Activity;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
-use Illuminate\Support\Facades\Auth;
 use ReflectionClass;
 
 trait RecordsActivity
 {
     protected static function bootRecordsActivity(): void
     {
-        if (Auth::guest()) {
+        if (auth()->guest()) {
             return;
         }
 
@@ -37,7 +36,7 @@ trait RecordsActivity
     {
         $attributes = [
             'type' => $this->getActivityType($event),
-            'user_id' => Auth::id(),
+            'user_id' => auth()->id(),
         ];
 
         $this->activities()->create($attributes);

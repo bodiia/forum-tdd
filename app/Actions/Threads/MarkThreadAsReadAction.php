@@ -7,15 +7,24 @@ namespace App\Actions\Threads;
 use App\Models\Thread;
 use App\Models\User;
 use App\Services\ThreadService;
+use Illuminate\Contracts\Cache\Repository as Cache;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Cache;
 
 final class MarkThreadAsReadAction
 {
-    public static function execute(?User $user, Thread $thread, ThreadService $service): void
+    public function __construct(
+        private readonly Cache $cache,
+        private readonly ThreadService $threadService,
+    ) {
+    }
+
+    public function execute(?User $user, Thread $thread): void
     {
         if (! is_null($user)) {
-            Cache::forever($service->getCacheKeyForVisitedThread($thread, $user), Carbon::now());
+            $this->cache->forever(
+                $this->threadService->getCacheKeyForVisitedThread($thread, $user),
+                Carbon::now()
+            );
         }
     }
 }

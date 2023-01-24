@@ -10,11 +10,12 @@ use Illuminate\Database\Eloquent\Model;
 
 final class MarkAsFavoriteAction
 {
-    public static function execute(Model $model, User $user): void
+    public function execute(Model $model, User $user): void
     {
         if (! $model->favorites()->whereBelongsTo($user)->exists()) {
             /** @var Favorite $favorite */
             $favorite = $model->favorites()->make();
+
             $favorite->user()->associate($user);
             $favorite->save();
         }

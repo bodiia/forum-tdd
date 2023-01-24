@@ -6,14 +6,20 @@ use App\Actions\Users\UploadAvatarAction;
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Redirect;
 
 class UserController extends Controller
 {
+    public function __construct(private readonly UploadAvatarAction $uploadAvatarAction)
+    {
+    }
+
     public function update(User $user, UpdateUserRequest $request): RedirectResponse
     {
-        UploadAvatarAction::execute($request->user(), $request->file('avatar'));
+        $this->uploadAvatarAction->execute(
+            $request->user(),
+            $request->file('avatar')
+        );
 
-        return Redirect::back()->with('success', __('flash.user.update.image'));
+        return back()->with('success', __('flash.user.update.image'));
     }
 }

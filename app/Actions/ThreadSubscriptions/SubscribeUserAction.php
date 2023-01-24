@@ -10,7 +10,7 @@ use App\Models\User;
 
 final class SubscribeUserAction
 {
-    public static function execute(User $user, Thread $thread): void
+    public function execute(User $user, Thread $thread): void
     {
         if (! $thread->newQuery()->getSubscription($user)) {
             /** @var ThreadSubscription $subscription */
